@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14463c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Táper de la semana</title>
+<style>
+:root{--g:#14463c;--g2:#dcebe5;--bg:#eef3f1;--card:#fff;--ink:#17262a;--mu:#62736f;--ln:#d9e4df;--y:#f2b33d;--on:#fff;--rd:#b3412f}
+@media(prefers-color-scheme:dark){:root{--g:#7fd1b4;--g2:#1b3229;--bg:#0f1715;--card:#17211e;--ink:#e8f0ed;--mu:#9bb0a8;--ln:#26352f;--on:#0b1612;--rd:#f08a78}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:ui-rounded,"Nunito","Trebuchet MS",system-ui,sans-serif;margin:0}
+button{font:inherit;cursor:pointer;border:0;border-radius:14px;padding:10px 14px;background:var(--g);color:var(--on);font-weight:650}
+button.ghost{background:transparent;color:var(--g);border:1.5px solid var(--ln)}button.red{background:transparent;color:var(--rd);border:1.5px solid var(--ln)}
+:focus-visible{outline:3px solid var(--y);outline-offset:2px}
+.app{max-width:960px;margin:auto;padding:env(safe-area-inset-top,0) 16px 110px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:18px 0 12px}.top h1{font-size:23px}.top p{margin:2px 0 0;color:var(--mu);font-size:13px}
+#sync{background:var(--g2);color:var(--g);font-size:13px;padding:8px 12px}
+.hero{background:linear-gradient(135deg,#14463c,#0d2f28);color:#fff;border-radius:26px;padding:20px;margin-bottom:16px}
+.hero small{opacity:.8}.hero h2{font-size:26px;margin:6px 0 14px}.hero .go{background:var(--y);color:#2a1d00}
+.clock{display:flex;align-items:center;gap:8px;margin:0 0 16px;font-size:13px}
+.clock b{display:block;font-size:15px}.clock div{flex:1;background:#ffffff1c;border-radius:14px;padding:9px 11px}.clock i{opacity:.6;font-style:normal}
+.wb{display:flex;align-items:center;gap:10px;margin:6px 0 14px}.wb>div{flex:1;text-align:center}.wb b{font-size:18px;font-family:ui-rounded,system-ui}.wb small{display:block;color:var(--mu)}
+.wb button{width:44px;background:var(--card);color:var(--g);border:1.5px solid var(--ln)}
+.list{display:grid;gap:10px}@media(min-width:720px){.list{grid-template-columns:1fr 1fr}}
+.day,.item,.card{background:var(--card);border:1.5px solid var(--ln);border-radius:20px;padding:14px}
+.day{display:grid;grid-template-columns:54px 1fr;gap:12px;cursor:pointer;align-items:center}
+.day.today{border-color:var(--y);box-shadow:0 0 0 3px #f2b33d33}.day.done{background:var(--g2)}.day.done h3{text-decoration:line-through;opacity:.7}
+.badge{height:54px;border-radius:16px;background:var(--g2);display:grid;place-items:center;text-align:center;font-size:22px;line-height:1}.badge b{font-size:12px;color:var(--g)}
+.day h3{font-size:17px}.day p,.item p{margin:3px 0 0;color:var(--mu);font-size:13px}
+.acts{grid-column:1/-1;display:flex;gap:8px}.acts button{padding:8px 12px;font-size:14px}.acts .ghost{margin-left:auto}
+.chip{background:var(--card);color:var(--g);border:1.5px solid var(--ln);padding:7px 12px;font-size:14px}.chip.on{background:var(--g);color:var(--on);border-color:var(--g)}
+.item{display:flex;gap:12px;align-items:center;cursor:pointer}.item h3{font-size:16px}.em{font-size:28px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+input,select,textarea{width:100%;font:inherit;border:1.5px solid var(--ln);border-radius:12px;padding:11px;background:var(--card);color:var(--ink)}
+label{display:block;font-weight:650;font-size:13px;margin:12px 0 5px}
+.note{background:var(--g2);color:var(--ink);border-radius:16px;padding:12px 14px;font-size:13px;margin-top:14px}
+.shop{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--ln);align-items:flex-start;cursor:pointer}.shop input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--g)}
+.shop.on span{text-decoration:line-through;color:var(--mu)}.shop small{display:block;color:var(--mu)}
+.empty{text-align:center;color:var(--mu);padding:30px}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;gap:6px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0));background:var(--card);border-top:1.5px solid var(--ln);z-index:5}
+nav button{flex:1;background:transparent;color:var(--mu);font-size:13px;padding:8px}nav button.on{background:var(--g2);color:var(--g)}nav span{display:block;font-size:20px}
+.modal{position:fixed;inset:0;background:#0009;display:none;align-items:flex-end;justify-content:center;z-index:10}.modal.open{display:flex}
+.box{background:var(--bg);width:min(680px,100%);max-height:92dvh;overflow:auto;border-radius:26px 26px 0 0;padding:20px 20px 28px}@media(min-width:720px){.modal{align-items:center}.box{border-radius:26px}}
+.pill{background:var(--g2);color:var(--g);border-radius:99px;padding:3px 10px;font-size:12px;font-weight:700}
+.heat{background:#f2b33d29;border-radius:14px;padding:11px 13px;margin:12px 0;font-size:14px}
+.box ul{padding-left:20px}.box p{white-space:pre-wrap}
+#toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#17262a;color:#fff;border-radius:12px;padding:10px 16px;display:none;z-index:20}#toast.show{display:block}
+.panel{display:none}.panel.on{display:block}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="top"><div><h1>🍱 Táper de la semana</h1><p>Se cocina el día anterior, se calienta a las 14:00</p></div><button id="sync" data-a="cfg">🔑 Conectar</button></header>
+<div class="wb" id="wb"></div>
+<section class="panel on" id="p-plan"><div id="hero"></div><div class="list" id="days"></div>
+<div class="note">🧊 Enfría el guiso pronto, guárdalo en la nevera y lleva el táper frío. A las 14:00 caliéntalo hasta que humee bien por el centro (74 °C). El arroz, mejor enfriarlo rápido y no dejarlo fuera.</div></section>
+<section class="panel" id="p-rec"><div class="head"><h2>Platos</h2><button data-a="newr">＋ Nuevo plato</button></div>
+<input id="q" placeholder="Buscar plato…" oninput="q=this.value;rRec()" style="margin-top:12px"><div class="row" id="rc"></div><div class="list" id="rl"></div></section>
+<section class="panel" id="p-shop"><div class="head"><h2>Lista de la compra</h2><button class="ghost" data-a="copy">Compartir</button></div><div class="card" style="margin-top:12px"><div class="head"><b id="sc"></b><button class="ghost" data-a="unchk" style="padding:6px 10px">Desmarcar</button></div><div id="sl"></div></div>
+<p class="note">Cantidades por persona. Revisa lo que ya tienes en casa.</p></section>
+</main>
+<nav><button class="on" data-a="tab" data-x="plan"><span>📅</span>Menú</button><button data-a="tab" data-x="rec"><span>👩‍🍳</span>Platos</button><button data-a="tab" data-x="shop"><span>🛒</span>Compra</button></nav>
+<div class="modal" id="m"><div class="box" id="mb"></div></div><div id="toast"></div>
+<script>
+const D=['Lunes','Martes','Miércoles','Jueves','Viernes'],PV=['domingo','lunes','martes','miércoles','jueves'];
+const EM={Pollo:'🍗',Carne:'🥩',Pescado:'🐟',Pasta:'🍝',Arroz:'🍚',Legumbres:'🫘',Otros:'🍽️'};
+const TIP={Arroz:'Añade una cucharada de agua, tapa y calienta 2 min; remueve y 1 min más.',Pasta:'Un chorrito de agua o salsa, tapa y 2 min; remueve y 1 min más.',Pescado:'Potencia media y tapado, 2 min, para que no se seque.',Pollo:'Tapa y calienta 2–3 min, remueve y 1–2 min más.',Carne:'Tapa y calienta 3 min, remueve y 2 min más.',Legumbres:'Tapa y calienta 3 min, remueve y 2 min más.',Otros:'Tapa, calienta y remueve a mitad.'};
+const SEED=`Arroz con pollo|Arroz|35|180 g de pollo;90 g de arroz;1 zanahoria;½ pimiento;½ cebolla;50 g de guisantes;Caldo|Sofríe la verdura, añade el pollo en dados, el arroz, los guisantes y el caldo. Cocina hasta que el arroz esté hecho.
+Ternera guisada con patatas|Carne|70|180 g de ternera para guisar;250 g de patatas;1 zanahoria;½ cebolla;100 g de tomate triturado;Guisantes;Caldo, pimentón y laurel|Dora la carne, añade verdura, tomate y caldo. Cuando esté tierna, incorpora las patatas.
+Pasta con pollo y tomate|Pasta|30|90 g de pasta;160 g de pollo;200 g de verduras;150 g de tomate triturado|Cocina el pollo en dados con la verdura y el tomate. Mezcla con la pasta cocida.
+Lomo en salsa con patatas|Carne|40|180 g de lomo de cerdo;250 g de patatas;1 cebolla;1 zanahoria;Ajo y caldo|Dora el lomo y cocínalo en salsa de cebolla, zanahoria y caldo. Acompaña con patatas.
+Lentejas con verduras y arroz|Legumbres|45|250 g de lentejas cocidas;50 g de arroz;1 zanahoria;½ cebolla;½ pimiento;Tomate triturado y caldo|Sofríe la verdura, añade lentejas, arroz y caldo. Cocina hasta que el arroz esté tierno.
+Albóndigas de pollo con pasta|Pollo|40|180 g de pollo picado;80 g de pasta;200 g de verduras;200 g de tomate triturado;Ajo y perejil|Forma albóndigas con ajo y perejil, dóralas y cocínalas en tomate. Sirve con pasta cocida.
+Pollo al horno con patatas|Pollo|50|200 g de pollo;250 g de patatas;200 g de verduras;Aceite, ajo y especias|Pon pollo, patatas y verduras aliñadas en una bandeja y hornea hasta que el pollo esté bien hecho.
+Pasta con atún y tomate|Pasta|25|90 g de pasta;1 lata de atún;200 g de verduras;150 g de tomate triturado;Guisantes|Haz una salsa de tomate con verduras y guisantes, añade el atún al final y mezcla con la pasta.
+Arroz meloso con pavo|Arroz|35|180 g de pavo;90 g de arroz;200 g de verduras;Caldo|Sofríe la verdura, añade pavo, arroz y caldo. Cocina hasta que quede meloso.
+Merluza en salsa con patatas|Pescado|35|200 g de merluza;250 g de patatas;200 g de verduras;Tomate y caldo|Cocina cebolla, tomate y zanahoria, añade la merluza y termina. Acompaña con patata cocida.
+Pollo suave al curry con arroz|Pollo|35|180 g de pollo;90 g de arroz;200 g de verduras;Tomate triturado;Curry suave|Cocina el pollo con cebolla, zanahoria y calabacín; añade tomate y curry. Sirve con arroz.
+Espaguetis con boloñesa casera|Pasta|35|90 g de espaguetis;180 g de carne picada magra;200 g de verduras;200 g de tomate triturado|Cocina la carne con verdura picada y tomate. Mezcla con los espaguetis.
+Garbanzos guisados con verduras|Legumbres|35|250 g de garbanzos cocidos;150 g de patata;200 g de verduras;Espinacas;Tomate y caldo|Sofríe, añade tomate, garbanzos, patata, espinacas y caldo hasta que la patata esté tierna.
+Lomo con champiñones y arroz|Carne|35|180 g de lomo;90 g de arroz;200 g de verduras;Champiñones;Caldo|Cocina el lomo en tiras con champiñones, cebolla y zanahoria y un poco de caldo. Acompaña con arroz.
+Guiso de pollo con patatas|Pollo|45|200 g de pollo;250 g de patatas;200 g de verduras;Caldo|Cocina el pollo con cebolla, zanahoria, guisantes y patatas en dados, con caldo suficiente.
+Arroz con pollo estilo fajita|Arroz|35|180 g de pollo;90 g de arroz;200 g de verduras;Pimiento y cebolla;Tomate y especias suaves|Saltea pollo, pimiento, cebolla y especias. Mezcla con arroz cocido y un poco de tomate.
+Ternera guisada con guisantes|Carne|70|180 g de ternera;250 g de patatas;200 g de verduras;Guisantes;Tomate y caldo|Cocina la ternera con verdura, tomate y caldo hasta que esté tierna; añade patata y guisantes.
+Macarrones con pollo y verduras|Pasta|30|90 g de macarrones;160 g de pollo;200 g de verduras;150 g de tomate triturado|Haz un sofrito de verduras y tomate, añade el pollo y mezcla con los macarrones.
+Albóndigas guisadas con patatas|Carne|45|180 g de carne picada;250 g de patatas;200 g de verduras;Tomate triturado;Guisantes|Forma y dora las albóndigas; cocínalas en tomate con verdura, patatas y guisantes.
+Salmón con arroz y verduras|Pescado|30|180 g de salmón;90 g de arroz;200 g de verduras;Limón y especias|Hornea el salmón con limón. Acompaña con arroz y verduras salteadas (o cambia por merluza).`;
+const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function fresh(){const recipes={},ids=[];SEED.split('\n').forEach((l,i)=>{const [name,cat,min,ing,steps]=l.split('|'),id='d'+(i+1);recipes[id]={id,name,cat,min:+min,ing:ing.split(';'),steps,t:0};ids.push(id)});return{recipes,weeks:[0,1,2,3].map(w=>ids.slice(w*5,w*5+5).map(r=>({r,dn:'',t:0}))),checks:{}}}
+let S;try{S=JSON.parse(localStorage.menu2)}catch(e){}S=S||fresh();
+let tab='plan',q='',cf='',SL=null,sha=null,busy=false,timer;
+/* ---- semanas: la semana 1 es la del lunes 5/1/2026 y rota cada 4 ---- */
+const wkOf=d=>{d=new Date(d);d.setHours(12,0,0,0);return(Math.round((d-new Date(2026,0,5,12))/6048e5)%4+4)%4};
+function mon0(){const d=new Date(),w=d.getDay();d.setDate(d.getDate()+(w==0?1:w==6?2:1-w));d.setHours(12,0,0,0);return d}
+const cw=wkOf(mon0());let aw=cw;
+const mondayStr=w=>{const d=mon0();d.setDate(d.getDate()+((w-cw+4)%4)*7);return d.toISOString().slice(0,10)};
+const lib=()=>Object.values(S.recipes).filter(r=>!r.del).sort((a,b)=>a.name.localeCompare(b.name,'es'));
+/* ---- guardado y sincronización con GitHub ---- */
+const cfg=()=>{const c=JSON.parse(localStorage.cf||'{}'),m=location.hostname.match(/^(.+)\.github\.io$/);return{o:c.o||(m?m[1]:''),r:c.r||(m?location.pathname.split('/')[1]:''),t:c.t||'',n:c.n||''}};
+const api=()=>{const c=cfg();return`https://api.github.com/repos/${c.o}/${c.r}/contents/data/menu.json`},hd=()=>({Authorization:'Bearer '+cfg().t,Accept:'application/vnd.github+json'});
+const dec=s=>decodeURIComponent(escape(atob(s.replace(/\s/g,'')))),enc=s=>btoa(unescape(encodeURIComponent(s)));
+const stat=s=>$('sync').textContent=s;
+function mrg(a,b){const o=JSON.parse(JSON.stringify(a));for(const k in b.recipes)if(!o.recipes[k]||b.recipes[k].t>o.recipes[k].t)o.recipes[k]=b.recipes[k];b.weeks.forEach((w,i)=>w.forEach((s,j)=>{if(s.t>o.weeks[i][j].t)o.weeks[i][j]=s}));for(const k in b.checks)if(Math.abs(b.checks[k])>Math.abs(o.checks[k]||0))o.checks[k]=b.checks[k];return o}
+const persist=()=>localStorage.menu2=JSON.stringify(S);
+function commit(){persist();render();clearTimeout(timer);timer=setTimeout(()=>push(1),1200)}
+async function pull(){const c=cfg();try{let d;if(c.t){const r=await fetch(api()+'?t='+Date.now(),{headers:hd(),cache:'no-store'});if(r.status==404){sha=null;stat('☁️ Listo');return}if(!r.ok)throw 0;const j=await r.json();sha=j.sha;d=JSON.parse(dec(j.content))}else{const r=await fetch('data/menu.json?t='+Date.now(),{cache:'no-store'});stat('🔑 Conectar');if(!r.ok)return;d=await r.json()}S=mrg(S,d);persist();render();if(c.t)stat('☁️ Sincronizado')}catch(e){stat(c.t?'⚠️ Sin conexión':'🔑 Conectar')}}
+async function push(retry){const c=cfg();if(!c.t||busy)return;busy=true;stat('⏳ Guardando…');try{const r=await fetch(api(),{method:'PUT',headers:hd(),body:JSON.stringify({message:'Menú actualizado por '+(c.n||'la familia'),content:enc(JSON.stringify(S)),...(sha?{sha}:{})})});if(r.status==409||r.status==422){busy=false;await pull();return retry?push(0):0}if(!r.ok)throw 0;sha=(await r.json()).content.sha;stat('☁️ Sincronizado')}catch(e){stat('⚠️ Sin guardar')}busy=false}
+/* ---- vistas ---- */
+function toast(s){const t=$('toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+const M=h=>{$('mb').innerHTML=h;$('m').classList.add('open')};
+function render(){document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id=='p-'+tab));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.x==tab));$('wb').hidden=tab=='rec';
+$('wb').innerHTML=`<button data-a="wk" data-x="-1" aria-label="Semana anterior">‹</button><div><b>Semana ${aw+1}</b><small>${aw==cw?'es la de esta semana':`<a href="#" data-a="now">volver a la actual (${cw+1})</a>`}</small></div><button data-a="wk" data-x="1" aria-label="Semana siguiente">›</button>`;rPlan();rRec();rShop()}
+function rPlan(){const dw=new Date().getDay(),td=dw>=1&&dw<=5?dw-1:-1;
+const t=new Date();t.setDate(t.getDate()+1);const tw=t.getDay();let h;
+if(tw>=1&&tw<=5){const s=S.weeks[cw][tw-1],r=S.recipes[s.r],ok=s.dn==mondayStr(cw);h=`<small>${ok?'Ya está cocinado ✓':'Hoy toca cocinar para mañana'}</small><h2>${EM[r.cat]} ${esc(r.name)}</h2><div class="clock"><div><i>Hoy</i><b>🍳 Cocinar</b></div><i>›</i><div><i>7:00</i><b>🎒 Al táper</b></div><i>›</i><div><i>14:00</i><b>🔥 Calentar</b></div></div><button class="go" data-a="rv" data-x="${r.id}">Ver receta</button>`}
+else h=`<small>Mañana no hay táper</small><h2>🎉 Día libre de cocina</h2><button class="go" data-a="now">Ver el menú de la semana</button>`;
+$('hero').innerHTML=`<div class="hero">${h}</div>`;
+$('days').innerHTML=S.weeks[aw].map((s,i)=>{const r=S.recipes[s.r],ok=s.dn==mondayStr(aw);return`<article class="day ${ok?'done':''} ${i==td&&aw==cw?'today':''}" data-a="view" data-x="${i}"><div class="badge"><div><b>${D[i].slice(0,3)}</b><br>${EM[r.cat]}</div></div><div><h3>${esc(r.name)}</h3><p>Se cocina el ${PV[i]} · ${r.min} min</p></div><div class="acts"><button class="${ok?'':'ghost'}" data-a="done" data-x="${i}">${ok?'✓ Cocinado':'Marcar cocinado'}</button><button class="ghost" data-a="swap" data-x="${i}">Cambiar</button></div></article>`}).join('')}
+function rRec(){const L=lib().filter(r=>(!cf||r.cat==cf)&&r.name.toLowerCase().includes(q.toLowerCase()));
+$('rc').innerHTML=['',...Object.keys(EM)].map(c=>`<button class="chip ${cf==c?'on':''}" data-a="cf" data-x="${c}">${c?EM[c]+' '+c:'Todos'}</button>`).join('');
+$('rl').innerHTML=L.map(r=>`<article class="item" data-a="rv" data-x="${r.id}"><span class="em">${EM[r.cat]}</span><div><h3>${esc(r.name)}</h3><p>${r.cat}, ${r.min} min, ${r.ing.length} ingredientes</p></div></article>`).join('')||'<p class="empty">No hay platos con ese filtro.</p>'}
+function shopItems(){const m=new Map();S.weeks[aw].forEach((s,i)=>S.recipes[s.r].ing.forEach(g=>{const k=g.toLowerCase().trim();if(!m.has(k))m.set(k,{g,k,d:[]});m.get(k).d.push(D[i].slice(0,3))}));return[...m.values()].sort((a,b)=>(on(a)-on(b))||a.g.localeCompare(b.g,'es'))}
+const on=x=>S.checks[aw+'|'+x.k]>0?1:0;
+function rShop(){const L=shopItems();$('sc').textContent=`${L.length} ingredientes, ${L.filter(on).length} marcados`;$('sl').innerHTML=L.map(x=>`<label class="shop ${on(x)?'on':''}"><input type="checkbox" ${on(x)?'checked':''} data-a="chk" data-x="${esc(x.k)}"><span>${esc(x.g)}<small>${x.d.join(', ')}</small></span></label>`).join('')}
+function rview(id,slot){const r=S.recipes[id];M(`<span class="pill">${EM[r.cat]} ${r.cat}</span><h2 style="margin:10px 0 4px">${esc(r.name)}</h2><small style="color:var(--mu)">${r.min} min, para 1 persona</small><div class="heat">🔥 <b>A las 14:00:</b> ${TIP[r.cat]||TIP.Otros}</div><h3>Ingredientes</h3><ul>${r.ing.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><h3>Preparación</h3><p>${esc(r.steps||'Sin pasos todavía.')}</p><div class="row"><button data-a="edit" data-x="${id}">Editar</button>${slot?`<button class="ghost" data-a="swap" data-x="${slot}">Cambiar</button>`:`<button class="ghost" data-a="place" data-x="${id}">Poner en el menú</button><button class="red" data-a="del" data-x="${id}">Borrar</button>`}<button class="ghost" data-a="close">Cerrar</button></div>`)}
+function form(id){const r=S.recipes[id]||{name:'',cat:'Pollo',min:30,ing:[],steps:''};M(`<h2>${id?'Editar plato':'Nuevo plato'}</h2><form id="fr"><input type="hidden" name="rid" value="${id||''}"><label>Nombre</label><input name="name" required value="${esc(r.name)}"><div class="row"><div style="flex:1"><label>Categoría</label><select name="cat">${Object.keys(EM).map(c=>`<option ${c==r.cat?'selected':''}>${c}</option>`).join('')}</select></div><div style="flex:1"><label>Minutos</label><input name="min" type="number" min="0" value="${r.min}"></div></div><label>Ingredientes (uno por línea)</label><textarea name="ing" rows="5" required>${esc(r.ing.join('\n'))}</textarea><label>Preparación</label><textarea name="steps" rows="4">${esc(r.steps)}</textarea><div class="row"><button>Guardar plato</button><button type="button" class="ghost" data-a="close">Cancelar</button></div></form>`)}
+function pickList(f=''){return lib().filter(r=>r.name.toLowerCase().includes(f.toLowerCase())).map(r=>`<article class="item" style="margin-bottom:8px" data-a="pick" data-x="${r.id}"><span class="em">${EM[r.cat]}</span><div><h3>${esc(r.name)}</h3><p>${r.cat}, ${r.min} min</p></div></article>`).join('')}
+function settings(){const c=cfg();M(`<h2>Compartir con tu familia</h2><p class="note" style="white-space:normal">Cada persona pega aquí su token de GitHub (solo se guarda en este dispositivo). Así los cambios de uno aparecen en el móvil del otro.</p><form id="fs"><label>Tu nombre</label><input name="n" value="${esc(c.n)}" placeholder="Ej. Papá"><label>Token de GitHub</label><input name="t" type="password" value="${esc(c.t)}" placeholder="github_pat_…"><div class="row"><div style="flex:1"><label>Usuario</label><input name="o" value="${esc(c.o)}"></div><div style="flex:1"><label>Repositorio</label><input name="r" value="${esc(c.r)}"></div></div><p style="font-size:13px;color:var(--mu)">Crea el token en github.com/settings/personal-access-tokens/new, solo para este repositorio, con permiso «Contents: Read and write».</p><div class="row"><button>Guardar y sincronizar</button><button type="button" class="ghost" data-a="close">Cerrar</button></div></form>`)}
+const ACT={
+close:()=>$('m').classList.remove('open'),cfg:settings,tab:x=>{tab=x;render()},wk:x=>{aw=(aw+ +x+4)%4;render()},now:()=>{aw=cw;tab='plan';render()},
+done:i=>{const s=S.weeks[aw][+i],m=mondayStr(aw);s.dn=s.dn==m?'':m;s.t=Date.now();commit()},
+view:i=>rview(S.weeks[aw][+i].r,i),rv:id=>rview(id),edit:id=>form(id),newr:()=>{SL=null;form()},new:()=>form(),
+swap:i=>{SL=[aw,+i];M(`<h2>Cambiar ${D[+i].toLowerCase()}</h2><input placeholder="Buscar plato…" oninput="$('pl').innerHTML=pickList(this.value)" style="margin:12px 0"><div id="pl">${pickList()}</div><div class="row"><button data-a="new">＋ Crear plato nuevo</button><button class="ghost" data-a="close">Cerrar</button></div>`)},
+pick:id=>{S.weeks[SL[0]][SL[1]]={r:id,dn:'',t:Date.now()};SL=null;ACT.close();commit();toast('Menú actualizado')},
+cf:x=>{cf=x;rRec()},
+place:id=>M(`<h2>Poner en el menú</h2><form id="fp"><input type="hidden" name="rid" value="${id}"><label>Semana</label><select name="w">${[0,1,2,3].map(i=>`<option value="${i}" ${i==aw?'selected':''}>Semana ${i+1}</option>`).join('')}</select><label>Día</label><select name="d">${D.map((d,i)=>`<option value="${i}">${d}</option>`).join('')}</select><div class="row"><button>Añadir</button><button type="button" class="ghost" data-a="close">Cancelar</button></div></form>`),
+del:id=>{if(S.weeks.flat().some(s=>s.r==id))return toast('Está en el menú: cámbialo primero');if(!confirm('¿Borrar este plato?'))return;S.recipes[id].del=1;S.recipes[id].t=Date.now();ACT.close();commit()},
+chk:(k,_,el)=>{const key=aw+'|'+k;S.checks[key]=el.checked?Date.now():-Date.now();commit()},
+unchk:()=>{Object.keys(S.checks).filter(k=>k.startsWith(aw+'|')).forEach(k=>S.checks[k]=-Date.now());commit()},
+copy:()=>{const t=`Compra, semana ${aw+1}\n\n`+shopItems().map(x=>'[ ] '+x.g).join('\n');navigator.share?navigator.share({text:t}).catch(()=>{}):navigator.clipboard.writeText(t).then(()=>toast('Lista copiada'))}};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;if(b.tagName=='A')e.preventDefault();if(b.type!='checkbox'&&b.closest('label'))return;ACT[b.dataset.a]?.(b.dataset.x,b.dataset.y,b)});
+$('m').addEventListener('click',e=>{if(e.target.id=='m')ACT.close()});
+document.addEventListener('submit',e=>{e.preventDefault();const f=e.target,v=n=>f.elements[n].value.trim(),now=Date.now();
+if(f.id=='fr'){const id=v('rid')||'u'+now.toString(36),ing=v('ing').split('\n').map(x=>x.trim()).filter(Boolean);S.recipes[id]={id,name:v('name'),cat:v('cat'),min:+v('min')||30,ing,steps:v('steps'),t:now};if(!v('rid')&&SL)S.weeks[SL[0]][SL[1]]={r:id,dn:'',t:now};SL=null;ACT.close();commit();toast('Plato guardado')}
+else if(f.id=='fp'){S.weeks[+v('w')][+v('d')]={r:v('rid'),dn:'',t:now};aw=+v('w');tab='plan';ACT.close();commit();toast('Añadido al menú')}
+else if(f.id=='fs'){localStorage.cf=JSON.stringify({n:v('n'),t:v('t'),o:v('o'),r:v('r')});ACT.close();pull().then(()=>push(1))}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});setInterval(()=>{if(!document.hidden&&!busy)pull()},45000);
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+stat(cfg().t?'☁️ …':'🔑 Conectar');render();pull();
+</script>
+</body>
+</html>
